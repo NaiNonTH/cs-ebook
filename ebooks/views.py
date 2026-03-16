@@ -3,8 +3,9 @@ from django.views.generic import FormView, CreateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login
+from django.contrib.auth.models import User
 
-from .forms import EBookForm
+from .forms import EBookForm, RegisterForm
 from .models import EBook
 
 # Create your views here.
@@ -17,6 +18,11 @@ class Login(FormView):
 	def form_valid(self, form):
 		login(self.request, form.get_user())
 		return super().form_valid(form)
+
+class Register(CreateView):
+	template_name = 'auth/register.html'
+	form_class = RegisterForm
+	success_url = '/login/'
 
 class CreateEBook(LoginRequiredMixin, CreateView):
 	form_class = EBookForm
