@@ -16,7 +16,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.conf import settings
+from django.conf.urls.static import static
+
+from ebooks import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-]
+    path('login/', views.Login.as_view(), name='login'),
+    path('create/', views.CreateEBook.as_view(), name='create_ebook'),
+    path('edit/<int:pk>/', views.EditEBook.as_view(), name='edit_ebook'),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

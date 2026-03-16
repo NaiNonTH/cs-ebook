@@ -1,0 +1,12 @@
+{% extends "../base.html" %}
+
+{% block title %}New eBook{% endblock title %}
+
+{% block content %}
+	<h1>เพิ่ม eBook</h1>
+	<form method="post" enctype="multipart/form-data">
+		{% csrf_token %}
+		{{ form.as_p }}
+		<button type="submit">เพิ่ม</button>
+	</form>
+{% endblock content %}
