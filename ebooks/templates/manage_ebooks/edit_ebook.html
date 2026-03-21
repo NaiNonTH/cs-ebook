@@ -1,0 +1,12 @@
+{% extends "../base.html" %}
+
+{% block title %}Edit eBook{% endblock title %}
+
+{% block content %}
+	<h1>เพิ่ม eBook</h1>
+	<form method="post" enctype="multipart/form-data">
+		{% csrf_token %}
+		{{ form.as_p }}
+		<button type="submit">แก้ไข</button>
+	</form>
+{% endblock content %}

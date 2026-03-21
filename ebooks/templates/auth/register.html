@@ -1,0 +1,12 @@
+{% extends "../base.html" %}
+
+{% block title %}Register{% endblock title %}
+
+{% block content %}
+	<h1>สมัครสมาชิก</h1>
+	<form method="post">
+		{% csrf_token %}
+		{{ form.as_p }}
+		<button type="submit">สมัครสมาชิก</button>
+	</form>
+{% endblock content %}
