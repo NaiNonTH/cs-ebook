@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Reading Details</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<div class="container mt-5">
+    <div class="row mb-4 align-items-center">
+        <div class="col">
+            <h2 class="mb-0">Reading Details for User: {{ user.username }}</h2>
+            <p class="text-muted">E-Book: {{ ebook.title }} (Total Pages: {{ ebook.page_count }})</p>
+        </div>
+        <div class="col-auto">
+            <a href="{% url 'market:calculate_market_share' %}" class="btn btn-outline-secondary">Back to Calculate</a>
+        </div>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-white fw-bold d-flex justify-content-between align-items-center">
+            Summary
+            {% if passed %}
+            <span class="badge bg-success">PASSED UREAD CRITERIA</span>
+            {% else %}
+            <span class="badge bg-danger">FAILED UREAD CRITERIA</span>
+            {% endif %}
+        </div>
+        <div class="card-body">
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Total unique pages read
+                    <span><strong>{{ unique_pages_count }}</strong></span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    50% Rule Requirement
+                    <span>Requires <strong>{{ fifty_percent_required }}</strong> pages</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    40% Continuous Sequence Requirement
+                    <span>Requires sequence length <strong>{{ forty_percent_required }}</strong> pages</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-header bg-white fw-bold">
+            Exact Chronological Reading Sequence (Jumps are visible!)
+        </div>
+        <div class="card-body">
+            {% if chronological_read_pages %}
+            <p class="text-muted small">This is the exact sequence the user traversed the pages.</p>
+            <div class="d-flex flex-wrap align-items-center gap-1">
+                {% for page in chronological_read_pages %}
+                <span class="badge bg-primary fs-6">{{ page }}</span>
+                {% if not forloop.last %}
+                <span class="text-muted fw-bold">→</span>
+                {% endif %}
+                {% endfor %}
+            </div>
+            {% else %}
+            <p class="text-muted mb-0">No pages read by this user.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

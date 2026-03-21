@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculate Marketshare</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<div class="container mt-5">
+    <div class="row mb-4 align-items-center">
+        <div class="col">
+            <h2 class="mb-0">Calculate & Save Marketshare</h2>
+            <p class="text-muted">Calculates URead based on 50% total reads & 40% sequence rules.</p>
+        </div>
+        <div class="col-auto">
+            <a href="{% url 'market:market_share_report' %}" class="btn btn-outline-secondary">Go to Report Page</a>
+        </div>
+    </div>
+
+    <!-- Filter Buttons -->
+    <div class="mb-3 d-flex gap-2">
+        <button class="btn btn-outline-primary active" id="btn-show-all" onclick="filterTable('all')">Show All Books</button>
+        <button class="btn btn-outline-success" id="btn-show-passed" onclick="filterTable('passed')">Has Passed Users</button>
+        <button class="btn btn-outline-danger" id="btn-show-failed" onclick="filterTable('failed')">Has Failed Users</button>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <table class="table table-hover table-bordered mb-0" id="calculationTable">
+                <thead class="table-dark">
+                    <tr>
+                        <th scope="col">E-Book ID</th>
+                        <th scope="col">Title</th>
+                        <th scope="col">Month</th>
+                        <th scope="col">Total Pages</th>
+                        <th scope="col">Calculated URead</th>
+                        <th scope="col">Users Details (Click to Inspect)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in calculated_data %}
+                    <tr class="calculation-row"
+                        data-has-passed="{% if item.uread_users %}true{% else %}false{% endif %}"
+                        data-has-failed="{% if item.failed_users %}true{% else %}false{% endif %}">
+                        <td>{{ item.ebook_id }}</td>
+                        <td>{{ item.title }}</td>
+                        <td>{{ item.month|date:"F Y" }}</td>
+                        <td>{{ item.total_pages }}</td>
+                        <td><span class="badge bg-success fs-6">{{ item.uread }}</span></td>
+                        <td>
+                            <div class="mb-1">
+                                <strong>Passed:</strong>
+                                {% if item.uread_users %}
+                                    <div class="d-flex flex-wrap gap-2 mt-1">
+                                    {% for user_id in item.uread_users %}
+                                        <a href="{% url 'market:user_log_details' item.ebook_id user_id %}" class="badge bg-success text-white text-decoration-none p-2">
+                                            User {{ user_id }}
+                                        </a>
+                                    {% endfor %}
+                                    </div>
+                                {% else %}
+                                    <span class="text-muted">None</span>
+                                {% endif %}
+                            </div>
+                            <div class="mt-2">
+                                <strong>Failed:</strong>
+                                {% if item.failed_users %}
+                                    <div class="d-flex flex-wrap gap-2 mt-1">
+                                    {% for user_id in item.failed_users %}
+                                        <a href="{% url 'market:user_log_details' item.ebook_id user_id %}" class="badge bg-danger text-white text-decoration-none p-2">
+                                            User {{ user_id }}
+                                        </a>
+                                    {% endfor %}
+                                    </div>
+                                {% else %}
+                                    <span class="text-muted">None</span>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center text-muted">No reading logs found to calculate.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer bg-white text-end">
+            <!-- Form to trigger calculation & saving in POST request -->
+            <form method="POST">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary" {% if not calculated_data %}disabled{% endif %}>
+                    Save Marketshare to Database
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function filterTable(filterType) {
+        // Update button active states
+        document.getElementById('btn-show-all').classList.remove('active');
+        document.getElementById('btn-show-passed').classList.remove('active');
+        document.getElementById('btn-show-failed').classList.remove('active');
+
+        document.getElementById('btn-show-' + filterType).classList.add('active');
+
+        // Filter rows
+        const rows = document.querySelectorAll('.calculation-row');
+        rows.forEach(row => {
+            const hasPassed = row.getAttribute('data-has-passed') === 'true';
+            const hasFailed = row.getAttribute('data-has-failed') === 'true';
+
+            if (filterType === 'all') {
+                row.style.display = '';
+            } else if (filterType === 'passed' && hasPassed) {
+                row.style.display = '';
+            } else if (filterType === 'failed' && hasFailed) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    }
+</script>
+</body>
+</html>
