@@ -1,0 +1,26 @@
+{% extends "../base.html" %}
+
+{% block title %}Ebooks{% endblock title %}
+
+{% block content %}
+	<h1>ค้นหา eBook</h1>
+	<form method="get">
+		{{ form.as_p }}
+		<button type="submit">Search</button>
+	</form>
+
+		{% for ebook in ebook_list %}
+				{% if ebook.publish_date <= today %}
+				<div>
+					<img src="media/{{ ebook.cover }}" alt="" width="200" height="300">
+					<p>Category: {{ ebook.get_category_display }}</p>
+					<p>Title: {{ ebook.title }}</p>
+					<p>Author: {{ ebook.author }}</p>
+					<p>Description: {{ ebook.description }}</p>
+					<p>Publish Date: {{ ebook.publish_date }}</p>
+					<p></p>
+				</div>
+				{% endif %}
+		{% endfor %}
+	
+{% endblock content %}
