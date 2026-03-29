@@ -56,17 +56,18 @@ class EditEBook(LoginRequiredMixin, UpdateView):
         return kwargs
 
 
-class ListEBook(ListView):
+class ListEBook(LoginRequiredMixin, ListView):
     model = EBook
     template_name = "manage_ebooks/list_ebook.html"
+    login_url = "/login/"
 
     def get_queryset(self):
         self.form = EbookSearchForm(self.request.GET)
 
-        if not self.request.GET:
-            return EBook.objects.none()
-
         qs = EBook.objects.all()
+        
+        if not self.request.GET:
+            return qs
 
         if self.form.is_valid():
             title = self.form.cleaned_data.get("title")
@@ -78,7 +79,7 @@ class ListEBook(ListView):
                 qs = qs.filter(title__icontains=title)
 
             if tag:
-                qs = qs.filter(tags__name__iexact=tag)
+                qs = qs.filter(tags__name__in=tag.split())
 
             if description:
                 qs = qs.filter(description__icontains=description)
