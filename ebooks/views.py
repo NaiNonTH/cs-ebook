@@ -56,7 +56,7 @@ class EditEBook(LoginRequiredMixin, UpdateView):
         return kwargs
 
 
-class ListEBook(ListView):
+class ListEBook(LoginRequiredMixin, ListView):
     model = EBook
     template_name = "manage_ebooks/list_ebook.html"
 
@@ -78,7 +78,7 @@ class ListEBook(ListView):
                 qs = qs.filter(title__icontains=title)
 
             if tag:
-                qs = qs.filter(tags__name__iexact=tag)
+                qs = qs.filter(tags__name__in=tag.split())
 
             if description:
                 qs = qs.filter(description__icontains=description)
