@@ -121,6 +121,13 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+STATIC_ROOT = BASE_DIR / 'static/'
+
+STATICFILES_DIRS = [
+    BASE_DIR / 'static/ebooks/',
+    BASE_DIR / 'static/market/'
+]
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
