@@ -59,6 +59,7 @@ class EditEBook(LoginRequiredMixin, UpdateView):
 class ListEBook(LoginRequiredMixin, ListView):
     model = EBook
     template_name = "manage_ebooks/list_ebook.html"
+    login_url = "/login/"
 
     def get_queryset(self):
         self.form = EbookSearchForm(self.request.GET)
