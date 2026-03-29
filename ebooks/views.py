@@ -28,6 +28,15 @@ class Register(CreateView):
     template_name = "auth/register.html"
     form_class = RegisterForm
     success_url = "/login/"
+    
+    
+class ManageEBook(LoginRequiredMixin, ListView):
+    model = EBook
+    template_name = "manage_ebooks/manage_ebook.html"
+    login_url = "/login/"
+    
+    def get_queryset(self):
+        return EBook.objects.filter(author__username=self.request.user.username)
 
 
 class CreateEBook(LoginRequiredMixin, CreateView):
