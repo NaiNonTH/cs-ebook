@@ -64,10 +64,10 @@ class ListEBook(LoginRequiredMixin, ListView):
     def get_queryset(self):
         self.form = EbookSearchForm(self.request.GET)
 
-        if not self.request.GET:
-            return EBook.objects.none()
-
         qs = EBook.objects.all()
+        
+        if not self.request.GET:
+            return qs
 
         if self.form.is_valid():
             title = self.form.cleaned_data.get("title")
