@@ -6,10 +6,13 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.shortcuts import redirect, render
 from django.urls import reverse
-from django.views.generic import CreateView, FormView, ListView, UpdateView
+from django.views.generic import CreateView, DetailView, FormView, ListView, UpdateView
 
 from .forms import EBookForm, EbookSearchForm, RegisterForm
 from .models import EBook
+
+from django.shortcuts import get_object_or_404
+from django.views import View
 
 # Create your views here.
 
@@ -115,3 +118,47 @@ class ListEBook(LoginRequiredMixin, ListView):
 def logout_view(request):
     logout(request)
     return redirect(reverse("login"))
+
+class PreviewEBook(View):
+    def get(self, request, pk):
+        ebook = get_object_or_404(EBook, pk=pk)
+
+        context = {
+            'ebook': ebook,
+            'is_preview': True
+        }
+        return render(request, 'reader/read_ebook.html', context)
+
+
+class ReadEBook(View):
+    def get(self, request, pk):
+        ebook = get_object_or_404(EBook, pk=pk)
+
+        page_str = request.GET.get('page', '1')
+
+        try:
+            page = int(page_str)
+        except (ValueError, TypeError):
+            page = 1
+
+        if page < 1:
+            page = 1
+        if page > ebook.page_count:
+            page = ebook.page_count
+
+        context = {
+            'ebook': ebook,
+            'page': page,
+            'total_pages': ebook.page_count,
+            'is_preview': False
+        }
+        return render(request, 'reader/read_ebook.html', context)
+    
+    from django.views.generic import DetailView
+from .models import EBook
+
+
+class EBookDetailView(DetailView):
+    model = EBook
+    template_name = 'ebooks/ebook_detail.html'
+    context_object_name = 'ebook'

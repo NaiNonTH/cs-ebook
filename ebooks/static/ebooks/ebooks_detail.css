@@ -1,0 +1,54 @@
+.ebook-layout {
+    display: flex;
+    gap: 2rem;
+    align-items: flex-start;
+
+    width: 100%;
+}
+
+.ebook-left {
+    flex: 0 0 160px; 
+}
+
+.ebook-cover {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+}
+
+.ebook-right {
+    flex: 1;
+    min-width: 0; 
+}
+
+.ebook-right h1 {
+    margin-bottom: 1rem;
+}
+
+.ebook-right p {
+    margin-bottom: 0.5rem;
+}
+
+.ebook-buttons {
+    margin-top: 1.5rem;
+    display: flex;
+    gap: 1rem;
+}
+
+@media (max-width: 768px) {
+    .ebook-layout {
+        flex-direction: column;
+    }
+
+    .ebook-left {
+        flex: unset;
+        text-align: center;
+    }
+
+    .ebook-cover {
+        width: 140px;
+        height: 200px;
+    }
+}
