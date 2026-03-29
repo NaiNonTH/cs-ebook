@@ -25,6 +25,7 @@ from ebooks import views
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("login/", views.Login.as_view(), name="login"),
+    path("logout/", views.logout_view, name="logout"),
     path("register/", views.Register.as_view(), name="register"),
     path("create/", views.CreateEBook.as_view(), name="create_ebook"),
     path("edit/<int:pk>/", views.EditEBook.as_view(), name="edit_ebook"),
