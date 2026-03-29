@@ -1,33 +1,32 @@
 {% extends "../base.html" %}
+{% load static %}
+
+{% block css %}
+	<link rel="stylesheet" href="{% static 'ebooks/list_ebooks.css' %}">
+{% endblock css %}
 
 {% block title %}Ebooks{% endblock title %}
 
 {% block content %}
 	<h1>ค้นหา eBook</h1>
-	<form method="get">
+	<form class="ebooks-search-box" method="get">
 		{{ form.as_p }}
-		<button type="submit">Search</button>
+		<button type="submit" class="btn-primary">Search</button>
 	</form>
-
+	<div class="ebooks-list">
 		{% for ebook in ebook_list %}
 				{% if ebook.publish_date <= today %}
-				<div>
-					<img src="media/{{ ebook.cover }}" alt="" width="200" height="300">
-					
-					<p>Title: {{ ebook.title }}</p>
-					<p>Author: {{ ebook.author }}</p>
-					<p>Description: {{ ebook.description }}</p>
-					<p>Category: {{ ebook.get_category_display }}</p>
-					<p>Tags {% for tag in ebook.tags.all %}
-								{{ tag.name }}
-								{% empty %}
-								No tags
-								{% endfor %}
-							</p>
-					<p>Publish Date: {{ ebook.publish_date }}</p>
-					
-				</div>
+				<article class="ebooks-card">
+					<img class="ebooks-img" src="media/{{ ebook.cover }}" alt="">
+					<h2 class="ebooks-title">{{ ebook.title }}</h2>
+					<p class="ebooks-author">{{ ebook.author }}</p>
+					<hr>
+					<div class="ebooks-group-data">
+						<p class="ebooks-category">{{ ebook.get_category_display }}</p>
+					</div>
+					<p class="ebooks-publish-date">{{ ebook.publish_date }}</p>
+				</article>
 				{% endif %}
 		{% endfor %}
-	
+	</div>
 {% endblock content %}

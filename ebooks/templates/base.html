@@ -1,11 +1,45 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>{% block title %}No Title{% endblock title %} - cs_ebook</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Serif+Display&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="{% static 'ebooks/style.css' %}">
+	{% block css %}{% endblock css %}
 </head>
 <body>
-	{% block content %}{% endblock content %}
+	<!-- Navigation Bar -->
+	<header class="site-header">
+		<div class="header-inner">
+			<span id="logo">cs_<em>ebook</em></span>
+			<nav class="main-nav">
+				<ul>
+					<li><a href="{% url 'list_ebook' %}">Search EBooks</a></li>
+					<li><a href="#">Link 2</a></li>
+					<li><a href="#">Link 3</a></li>
+					<li><a href="#">Link 4</a></li>
+				</ul>
+			</nav>
+		</div>
+	</header>
+
+	<!-- Main Content -->
+	<main class="site-main">
+		<div class="content-wrapper">
+			{% block content %}{% endblock content %}
+		</div>
+	</main>
+
+	<!-- Footer -->
+	<footer class="site-footer">
+		<div class="footer-inner">
+			<span class="footer-copy">&copy; 2026 &mdash; CS KMUTNB</span>
+		</div>
+	</footer>
 </body>
 </html>

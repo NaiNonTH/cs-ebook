@@ -1,0 +1,6 @@
+.auth-form {
+	margin: 1rem 0;
+}
+.auth-form.login {
+	max-width: 500px;
+}
