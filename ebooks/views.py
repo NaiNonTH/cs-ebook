@@ -4,9 +4,9 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
-from django.shortcuts import render, redirect
-from django.views.generic import CreateView, FormView, ListView, UpdateView
+from django.shortcuts import redirect, render
 from django.urls import reverse
+from django.views.generic import CreateView, FormView, ListView, UpdateView
 
 from .forms import EBookForm, EbookSearchForm, RegisterForm
 from .models import EBook
@@ -75,7 +75,7 @@ class ListEBook(LoginRequiredMixin, ListView):
         self.form = EbookSearchForm(self.request.GET)
 
         qs = EBook.objects.all()
-        
+
         if not self.request.GET:
             return qs
 
@@ -84,6 +84,7 @@ class ListEBook(LoginRequiredMixin, ListView):
             tag = self.form.cleaned_data.get("tag")
             description = self.form.cleaned_data.get("description")
             author = self.form.cleaned_data.get("author")
+            category = self.form.cleaned_data.get("category")
 
             if title:
                 qs = qs.filter(title__icontains=title)
@@ -97,6 +98,9 @@ class ListEBook(LoginRequiredMixin, ListView):
             if author:
                 qs = qs.filter(author=author)
 
+            if category:
+                qs = qs.filter(category__exact=category)
+
         return qs.distinct()
 
     def get_context_data(self, **kwargs):
@@ -105,8 +109,8 @@ class ListEBook(LoginRequiredMixin, ListView):
 
         form = EbookSearchForm(self.request.GET)
         context["form"] = form
-
         return context
+
 
 def logout_view(request):
     logout(request)

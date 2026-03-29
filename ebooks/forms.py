@@ -70,6 +70,11 @@ class EbookSearchForm(forms.Form):
     title = forms.CharField(required=False, label="Title")
     tag = forms.CharField(required=False, label="Tag")
     description = forms.CharField(required=False, label="Description")
+    category = forms.ChoiceField(
+        required=False,
+        choices=[("", "---")] + EBook._meta.get_field("category").choices,
+        initial="",
+    )
     author = forms.ModelChoiceField(
         queryset=User.objects.all(), required=False, empty_label="All authors"
     )
