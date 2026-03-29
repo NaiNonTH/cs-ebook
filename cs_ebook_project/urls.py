@@ -27,7 +27,8 @@ urlpatterns = [
     path("login/", views.Login.as_view(), name="login"),
     path("logout/", views.logout_view, name="logout"),
     path("register/", views.Register.as_view(), name="register"),
-    path("create/", views.CreateEBook.as_view(), name="create_ebook"),
-    path("edit/<int:pk>/", views.EditEBook.as_view(), name="edit_ebook"),
+    path("manage/", views.ManageEBook.as_view(), name="manage_ebook"),
+    path("manage/create/", views.CreateEBook.as_view(), name="create_ebook"),
+    path("manage/edit/<int:pk>/", views.EditEBook.as_view(), name="edit_ebook"),
     path("search", view=views.ListEBook.as_view(), name="list_ebook"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
