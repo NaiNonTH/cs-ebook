@@ -41,8 +41,12 @@
 .ebooks-entry {
 	display: flex;
 	gap: 1rem;
+	margin: 1rem 0;
 	padding: 1rem;
 	flex-wrap: wrap;
+	
+	border: 1px solid var(--paper-dark);
+	background: var(--paper-mid);
 }
 .ebooks-entry > div {
 	flex: 1;

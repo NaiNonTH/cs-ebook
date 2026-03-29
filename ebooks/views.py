@@ -42,7 +42,7 @@ class ManageEBook(LoginRequiredMixin, ListView):
 class CreateEBook(LoginRequiredMixin, CreateView):
     form_class = EBookForm
     template_name = "manage_ebooks/create_ebook.html"
-    success_url = "/"
+    success_url = "/manage"
     login_url = "/login/"
 
     def get_form_kwargs(self):
@@ -56,7 +56,7 @@ class EditEBook(LoginRequiredMixin, UpdateView):
     model = EBook
     form_class = EBookForm
     template_name = "manage_ebooks/edit_ebook.html"
-    success_url = "/"
+    success_url = "/manage"
     login_url = "/login/"
 
     def get_form_kwargs(self):
