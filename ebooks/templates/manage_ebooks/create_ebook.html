@@ -4,9 +4,68 @@
 
 {% block content %}
 	<h1>เพิ่ม eBook</h1>
-	<form method="post" enctype="multipart/form-data">
+	<form id="upload-form" method="post" enctype="multipart/form-data">
 		{% csrf_token %}
 		{{ form.as_p }}
+		<p>
+			<label for="file-input">Upload Pages (.png only)</label>
+			<input type="file" id="file-input" accept="image/*" multiple>
+		</p>
+		
+    	<!-- drag-and-drop preview grid -->
+    	<div id="preview-grid" style="display:flex; flex-wrap:wrap; gap:8px; margin:16px 0;"></div>
+
+    	<!-- hidden input where final ordered files are placed before submit -->
+    	<div id="file-container"></div>
 		<button type="submit" class="btn-primary">เพิ่ม</button>
 	</form>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+	<script>
+	    const input = document.getElementById('file-input');
+	    const grid = document.getElementById('preview-grid');
+	    let fileList = [];
+
+	    // build a draggable preview when files are selected
+	    input.addEventListener('change', () => {
+	        fileList = Array.from(input.files);
+	        grid.innerHTML = '';
+
+	        fileList.forEach((file, i) => {
+	            const reader = new FileReader();
+	            reader.onload = e => {
+	                const div = document.createElement('div');
+	                div.dataset.index = i;
+	                div.style.cssText = 'cursor:grab; text-align:center; width:100px;';
+	                div.innerHTML = `<img src="${e.target.result}" style="width:100px; height:130px; object-fit:cover;"/>
+	                                 <small>${file.name}</small>`;
+	                grid.appendChild(div);
+	            };
+	            reader.readAsDataURL(file);
+	        });
+	    });
+
+	    // enable drag-and-drop reordering
+	    Sortable.create(grid, { animation: 150 });
+
+	    // before submit, reorder files to match the visual order
+	    document.getElementById('upload-form').addEventListener('submit', () => {
+	        const container = document.getElementById('file-container');
+	        container.innerHTML = '';
+
+	        const orderedItems = Array.from(grid.children);
+	        const dt = new DataTransfer();
+
+	        orderedItems.forEach(div => {
+	            dt.items.add(fileList[parseInt(div.dataset.index)]);
+	        });
+
+	        const hiddenInput = document.createElement('input');
+	        hiddenInput.type = 'file';
+	        hiddenInput.name = 'images';
+	        hiddenInput.multiple = true;
+	        hiddenInput.files = dt.files;  // assign reordered files
+	        container.appendChild(hiddenInput);
+	    });
+	</script>
 {% endblock content %}
