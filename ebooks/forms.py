@@ -35,12 +35,15 @@ class CreateEBookForm(forms.ModelForm):
     def clean(self):
         cleaned_data = super().clean()
         publish_date = cleaned_data.get("publish_date")
-    
+
         if publish_date:
             cleaned_data["post_status"] = "P" if publish_date <= date.today() else "U"
-    
+
         uploaded_files = self.page_images.getlist('images') if self.page_images else []
-    
+
+        if len(uploaded_files) == 0:
+        	raise forms.ValidationError("ไม่พบไฟล์หน้าหนังสือ กรุณาอัปโหลดหน้าหนังสือเป็นไฟล์รูป .png")
+
         # validate PNG only
         non_png = [
             f.name for f in uploaded_files
@@ -50,24 +53,24 @@ class CreateEBookForm(forms.ModelForm):
             raise forms.ValidationError(
                 f"ไฟล์ต่อไปนี้ไม่ใช่ .png: {', '.join(non_png)} กรุณาอัพโหลดเฉพาะไฟล์ .png เท่านั้น"
             )
-    
+
         return cleaned_data
-    
+
     def save(self, commit=True):
         instance = super().save(commit=False)
         instance.post_status = self.cleaned_data["post_status"]
         instance.author = self.user
-    
+
         # derive page count from uploaded images
         uploaded_files = self.page_images.getlist('images') if self.page_images else []
         instance.page_count = len(uploaded_files)
-    
+
         if commit:
             instance.save()
             self.save_m2m()
-    
+
         return instance
-    
+
 
 class EditEBookForm(forms.ModelForm):
     class Meta:
@@ -94,7 +97,7 @@ class EditEBookForm(forms.ModelForm):
         cleaned_data["post_status"] = "P" if publish_date <= date.today() else "U"
 
         return cleaned_data
-        
+
     def save(self, commit=True):
         instance = super().save(commit=False)
         instance.post_status = self.cleaned_data["post_status"]
