@@ -12,7 +12,7 @@ from django.urls import reverse
 from django.views.generic import CreateView, DetailView, FormView, ListView, UpdateView
 
 from .forms import CreateEBookForm, EditEBookForm, EbookSearchForm, RegisterForm
-from .models import EBook
+from .models import EBook, LogRead
 
 from django.shortcuts import get_object_or_404
 from django.views import View
@@ -160,6 +160,13 @@ class ReadEBook(View):
             page = 1
         if page > ebook.page_count:
             page = ebook.page_count
+
+        if request.user.is_authenticated:
+            LogRead.objects.get_or_create(
+                user=request.user,
+                ebook=ebook,
+                page_number=page,
+            )
 
         context = {
             'ebook': ebook,
