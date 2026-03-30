@@ -627,3 +627,10 @@ a.tag:hover {
     flex-wrap: wrap;
     gap: 0.5rem;
 }
+
+.errorlist {
+	background: #ffc4c4;
+	border: 1px solid crimson;
+	color: crimson;
+	padding: 0.5rem 2rem;
+}
