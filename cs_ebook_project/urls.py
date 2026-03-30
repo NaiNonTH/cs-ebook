@@ -18,5 +18,6 @@ urlpatterns = [
     path('ebook/<int:pk>/preview/', views.PreviewEBook.as_view(), name='preview_ebook'),
     path('ebook/<int:pk>/read/', views.ReadEBook.as_view(), name='read_ebook'),
     path("market/", include("market.urls")),
+    path("", view=views.ListEBook.as_view(), name="list_ebook"),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
