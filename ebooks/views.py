@@ -17,6 +17,8 @@ from .models import EBook
 from django.shortcuts import get_object_or_404
 from django.views import View
 
+from django.core.exceptions import PermissionDenied
+
 # Create your views here.
 
 
@@ -141,9 +143,14 @@ def logout_view(request):
     logout(request)
     return redirect(reverse("login"))
 
-class PreviewEBook(View):
+class PreviewEBook(LoginRequiredMixin, View):
+    login_url = "/login/"
+
     def get(self, request, pk):
         ebook = get_object_or_404(EBook, pk=pk)
+
+        if ebook.author != request.user:
+            return render(request, "403.html")
 
         context = {
             'ebook': ebook,
@@ -151,39 +158,61 @@ class PreviewEBook(View):
         }
         return render(request, 'reader/read_ebook.html', context)
 
-class EBookDetailView(DetailView):
+class EBookDetailView(LoginRequiredMixin, DetailView):
     model = EBook
     template_name = 'ebooks/ebook_detail.html'
     context_object_name = 'ebook'
+    login_url = "/login/"
 
-class ReadEBook(View):
+    def get_object(self):
+        ebook = super().get_object()
+
+        if ebook.author != self.request.user:
+            raise PermissionDenied
+
+        return ebook
+
+class ReadEBook(LoginRequiredMixin, View):
+    login_url = "/login/"
+
     def get(self, request, pk):
         ebook = get_object_or_404(EBook, pk=pk)
 
-        # path ไป folder รูป
+        if ebook.author != request.user:
+            return render(request, "403.html")
+
         folder_path = os.path.join(settings.MEDIA_ROOT, f'books/{ebook.id}')
 
-        # list รูปทั้งหมด
+        if not os.path.exists(folder_path):
+            return render(request, 'reader/read_ebook.html', {
+                'ebook': ebook,
+                'error': 'ไม่พบไฟล์หนังสือ'
+            })
+
         pages = sorted([
-            f for f in os.listdir(folder_path) if f.endswith('.png')
+            f for f in os.listdir(folder_path)
+            if f.lower().endswith(('.png', '.jpg', '.jpeg'))
         ])
 
         total_pages = len(pages)
 
-        # รับค่า page (กัน error)
+        if total_pages == 0:
+            return render(request, 'reader/read_ebook.html', {
+                'ebook': ebook,
+                'error': 'ยังไม่มีหน้าหนังสือ'
+            })
+
         page_str = request.GET.get('page')
         try:
             page = int(page_str) if page_str else 1
         except ValueError:
             page = 1
 
-        # clamp page
         if page < 1:
             page = 1
         if page > total_pages:
             page = total_pages
 
-        # current image
         current_image = f'/media/books/{ebook.id}/{pages[page-1]}'
 
         return render(request, 'reader/read_ebook.html', {
