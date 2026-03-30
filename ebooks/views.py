@@ -1,5 +1,8 @@
+import os
+import re
 from datetime import date
 
+from django.conf import settings
 from django.contrib.auth import login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -8,7 +11,7 @@ from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.views.generic import CreateView, FormView, ListView, UpdateView
 
-from .forms import EBookForm, EbookSearchForm, RegisterForm
+from .forms import CreateEBookForm, EditEBookForm, EbookSearchForm, RegisterForm
 from .models import EBook
 
 # Create your views here.
@@ -40,30 +43,49 @@ class ManageEBook(LoginRequiredMixin, ListView):
 
 
 class CreateEBook(LoginRequiredMixin, CreateView):
-    form_class = EBookForm
+    form_class = CreateEBookForm
     template_name = "manage_ebooks/create_ebook.html"
     success_url = "/manage"
     login_url = "/login/"
+    
+    def natural_sort_key(self, filename):
+        return [int(c) if c.isdigit() else c.lower() for c in re.split(r'(\d+)', filename)]
+
+    def form_valid(self, form):
+        # save the Ebook instance first
+        response = super().form_valid(form)
+
+        # then handle page image uploads
+        files = self.request.FILES.getlist('images')
+
+        save_dir = os.path.join(settings.MEDIA_ROOT, f'books/{self.object.pk}')
+        
+        os.makedirs(save_dir, exist_ok=True)
+
+        for index, f in enumerate(files, start=1):
+            ext = os.path.splitext(f.name)[1]
+            new_name = f"page_{index}{ext}"
+            file_path = os.path.join(save_dir, new_name)
+            with open(file_path, 'wb+') as destination:
+                for chunk in f.chunks():
+                    destination.write(chunk)
+
+        return response
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs["user"] = self.request.user
+        kwargs['page_images'] = self.request.FILES
 
         return kwargs
 
 
 class EditEBook(LoginRequiredMixin, UpdateView):
     model = EBook
-    form_class = EBookForm
+    form_class = EditEBookForm
     template_name = "manage_ebooks/edit_ebook.html"
     success_url = "/manage"
     login_url = "/login/"
-
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs["user"] = self.request.user
-
-        return kwargs
 
 
 class ListEBook(LoginRequiredMixin, ListView):
