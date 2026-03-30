@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Marketshare Report</title>
+    <title>ระบบรายงานส่วนแบ่ง</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
@@ -12,10 +12,10 @@
 <div class="container mt-5">
     <div class="row mb-4 align-items-center">
         <div class="col">
-            <h2 class="mb-0">Marketshare Monthly Report</h2>
+            <h2 class="mb-0">ระบบรายงานส่วนแบ่งประจำเดือน</h2>
         </div>
         <div class="col-auto">
-            <a href="{% url 'market:calculate_market_share' %}" class="btn btn-outline-primary">Go to Calculation Page</a>
+            <a href="{% url 'market:calculate_market_share' %}" class="btn btn-outline-primary">ไปที่หน้าคำนวณส่วนแบ่ง</a>
         </div>
     </div>
 
@@ -24,7 +24,7 @@
         <div class="card-body bg-white rounded">
             <form method="GET" action="{% url 'market:market_share_report' %}" class="row gx-3 align-items-center">
                 <div class="col-auto">
-                    <label for="monthFilter" class="col-form-label fw-bold">Select Month:</label>
+                    <label for="monthFilter" class="col-form-label fw-bold">เดือน/ปี:</label>
                 </div>
                 <div class="col-auto">
                     <select class="form-select" id="monthFilter" name="month">
@@ -33,12 +33,12 @@
                             {{ d|date:"F Y" }}
                         </option>
                         {% empty %}
-                        <option value="" disabled selected>No data available</option>
+                        <option value="" disabled selected>ไม่พบข้อมูลในระบบ</option>
                         {% endfor %}
                     </select>
                 </div>
                 <div class="col-auto">
-                    <button type="submit" class="btn btn-success" {% if not available_months %}disabled{% endif %}>Filter</button>
+                    <button type="submit" class="btn btn-success" {% if not available_months %}disabled{% endif %}>ตกลง</button>
                 </div>
             </form>
         </div>
@@ -47,33 +47,57 @@
     <!-- Results Table -->
     <div class="card shadow-sm">
         <div class="card-body p-0">
-            <table class="table table-hover table-bordered mb-0">
-                <thead class="table-primary">
-                    <tr>
-                        <th scope="col">E-Book ID</th>
-                        <th scope="col">Title</th>
-                        <th scope="col">Total Pages</th>
-                        <th scope="col">Calculated URead</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for item in market_data %}
-                    <tr>
-                        <td>{{ item.ebook.id }}</td>
-                        <td>{{ item.ebook.title }}</td>
-                        <td>{{ item.ebook.page_count }}</td>
-                        <td><span class="badge bg-primary fs-6">{{ item.uread }}</span></td>
-                    </tr>
-                    {% empty %}
-                    <tr>
-                        <td colspan="4" class="text-center text-muted py-4">
-                            No market share data found for <strong>{{ selected_month|date:"F Y" }}</strong>. <br>
-                            Make sure to calculate and save the marketshare first!
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+            <div class="table-responsive">
+                <table class="table table-hover table-bordered mb-0 text-center align-middle">
+                    <thead class="table-primary">
+                        <tr>
+                            <th scope="col">e-book ID</th>
+                            <th scope="col" class="text-start">ชื่อเรื่อง</th>
+                            <th scope="col">หน้าทั้งหมด</th>
+                            <th scope="col">ผู้ใช้ที่เข้าเกณฑ์ (Uread)</th>
+                            <th scope="col">% คนอ่านผ่านเกณฑ์<br><small class="text-muted fw-normal">(จากคนอ่านเล่มนี้ทั้งหมด)</small></th>
+                            <th scope="col">ส่วนแบ่งตลาด (%)<br><small class="text-muted fw-normal">(เทียบกับทุกเล่มในเดือน)</small></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in market_data %}
+                        <tr>
+                            <td>{{ item.ebook.id }}</td>
+                            <td class="text-start">{{ item.ebook.title }}</td>
+                            <td>{{ item.ebook.page_count }}</td>
+                            <td><span class="badge bg-primary fs-6">{{ item.uread }}</span></td>
+
+                            <!-- คอลัมน์ที่ 1: % คนอ่านผ่านเกณฑ์ -->
+                            <td>
+                                {% if item.pass_rate %}
+                                    {{ item.pass_rate|floatformat:2 }}%
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+
+                            <!-- คอลัมน์ที่ 2: ส่วนแบ่งตลาดรวม -->
+                            <td>
+                                <span class="badge bg-success fs-6">
+                                    {% if item.market_share %}
+                                        {{ item.market_share|floatformat:2 }}%
+                                    {% else %}
+                                        0.00%
+                                    {% endif %}
+                                </span>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6" class="text-center text-muted py-4">
+                                ไม่พบข้อมูลของเดือน/ปี <strong>{{ selected_month|date:"F Y" }}</strong> <br>
+                                กรุณาคำนวณจากหน้าคำนวณส่วนแบ่งก่อน
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>

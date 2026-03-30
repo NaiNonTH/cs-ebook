@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Reading Details</title>
+    <title>ข้อมูลการอ่านหนังสือ</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
@@ -12,36 +12,36 @@
 <div class="container mt-5">
     <div class="row mb-4 align-items-center">
         <div class="col">
-            <h2 class="mb-0">Reading Details for User: {{ user.username }}</h2>
-            <p class="text-muted">E-Book: {{ ebook.title }} (Total Pages: {{ ebook.page_count }})</p>
+            <h2 class="mb-0">ข้อมูลการอ่านของ: {{ user.username }}</h2>
+            <p class="text-muted">e-book: {{ ebook.title }} (จำนวนหน้าทั้งหมด: {{ ebook.page_count }})</p>
         </div>
         <div class="col-auto">
-            <a href="{% url 'market:calculate_market_share' %}" class="btn btn-outline-secondary">Back to Calculate</a>
+            <a href="{% url 'market:calculate_market_share' %}" class="btn btn-outline-secondary">กลับไปที่หน้าคำนวณส่วนแบ่ง</a>
         </div>
     </div>
 
     <div class="card shadow-sm mb-4">
         <div class="card-header bg-white fw-bold d-flex justify-content-between align-items-center">
-            Summary
+            สรุป
             {% if passed %}
-            <span class="badge bg-success">PASSED UREAD CRITERIA</span>
+            <span class="badge bg-success">ผ่านเกณฑ์</span>
             {% else %}
-            <span class="badge bg-danger">FAILED UREAD CRITERIA</span>
+            <span class="badge bg-danger">ไม่ผ่านเกณฑ์</span>
             {% endif %}
         </div>
         <div class="card-body">
             <ul class="list-group list-group-flush">
                 <li class="list-group-item d-flex justify-content-between align-items-center">
-                    Total unique pages read
+                    จำนวนหน้าทั้งหมดที่อ่าน (โดยไม่ซ้ำกัน)
                     <span><strong>{{ unique_pages_count }}</strong></span>
                 </li>
                 <li class="list-group-item d-flex justify-content-between align-items-center">
-                    50% Rule Requirement
-                    <span>Requires <strong>{{ fifty_percent_required }}</strong> pages</span>
+                    เมื่อต้องอ่านครบ 50%
+                    <span>จะต้องอ่านขั้นต่ำ <strong>{{ fifty_percent_required }}</strong> หน้า</span>
                 </li>
                 <li class="list-group-item d-flex justify-content-between align-items-center">
-                    40% Continuous Sequence Requirement
-                    <span>Requires sequence length <strong>{{ forty_percent_required }}</strong> pages</span>
+                    เมื่อต้องอ่านต่อเนื่อง 40%
+                    <span>จะต้องอ่านขั้นต่ำ <strong>{{ forty_percent_required }}</strong> หน้า</span>
                 </li>
             </ul>
         </div>
@@ -49,16 +49,16 @@
 
     <div class="card shadow-sm">
         <div class="card-header bg-white fw-bold">
-            Exact Chronological Reading Sequence (Jumps are visible!)
+            ลำดับการอ่าน (เวลาก่อน -> ล่าสุด)
         </div>
         <div class="card-body">
             {% if chronological_read_pages %}
-            <p class="text-muted small">This is the exact sequence the user traversed the pages.</p>
+            <!-- <p class="text-muted small">This is the exact sequence the user traversed the pages.</p> -->
             <div class="d-flex flex-wrap align-items-center gap-1">
                 {% for page in chronological_read_pages %}
                 <span class="badge bg-primary fs-6">{{ page }}</span>
                 {% if not forloop.last %}
-                <span class="text-muted fw-bold">→</span>
+                <!-- <span class="text-muted fw-bold">→</span> -->
                 {% endif %}
                 {% endfor %}
             </div>
