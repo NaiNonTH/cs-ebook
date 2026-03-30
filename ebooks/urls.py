@@ -10,4 +10,5 @@ urlpatterns = [
     path("manage/edit/<int:pk>/", views.EditEBook.as_view(), name="edit_ebook"),
     path('<int:pk>/', views.EBookDetailView.as_view(), name='ebook_detail'),
     path('<int:pk>/read/', views.ReadEBook.as_view(), name='read_ebook'),
+    path('dashboard/', views.ReadingDashboard.as_view(), name='reading_dashboard'),
 ]

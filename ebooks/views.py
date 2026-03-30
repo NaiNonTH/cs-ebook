@@ -185,3 +185,28 @@ class EBookDetailView(DetailView):
     model = EBook
     template_name = 'ebooks/ebook_detail.html'
     context_object_name = 'ebook'
+
+
+class ReadingDashboard(LoginRequiredMixin, View):
+    login_url = '/login/'
+
+    def get(self, request):
+        ebook_ids = (
+            LogRead.objects
+            .filter(user=request.user)
+            .values_list('ebook', flat=True)
+            .distinct()
+        )
+        ebooks = EBook.objects.filter(pk__in=ebook_ids)
+
+        books_data = []
+        for ebook in ebooks:
+            pages_read = LogRead.objects.filter(user=request.user, ebook=ebook).count()
+            percent = min(round((pages_read / ebook.page_count) * 100), 100) if ebook.page_count else 0
+            books_data.append({
+                'ebook': ebook,
+                'pages_read': pages_read,
+                'percent': percent,
+            })
+
+        return render(request, 'ebooks/reading_dashboard.html', {'books_data': books_data})
