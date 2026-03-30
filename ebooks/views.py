@@ -6,7 +6,7 @@ from django.conf import settings
 from django.contrib.auth import login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.models import User
+from django.http import Http404
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.views.generic import CreateView, DetailView, FormView, ListView, UpdateView
@@ -130,10 +130,10 @@ class ListEBook(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["today"] = date.today()
 
         form = EbookSearchForm(self.request.GET)
         context["form"] = form
+        
         return context
 
 
@@ -141,20 +141,13 @@ def logout_view(request):
     logout(request)
     return redirect(reverse("login"))
 
-class PreviewEBook(View):
-    def get(self, request, pk):
-        ebook = get_object_or_404(EBook, pk=pk)
-
-        context = {
-            'ebook': ebook,
-            'is_preview': True
-        }
-        return render(request, 'reader/read_ebook.html', context)
-
 
 class ReadEBook(View):
     def get(self, request, pk):
         ebook = get_object_or_404(EBook, pk=pk)
+        
+        if ebook.post_status != 'P':
+            return Http404()
 
         page_str = request.GET.get('page', '1')
 
@@ -174,9 +167,10 @@ class ReadEBook(View):
             'total_pages': ebook.page_count,
             'is_preview': False
         }
+        
         return render(request, 'reader/read_ebook.html', context)
     
-    from django.views.generic import DetailView
+from django.views.generic import DetailView
 from .models import EBook
 
 

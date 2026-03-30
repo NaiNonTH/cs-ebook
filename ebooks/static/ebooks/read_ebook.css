@@ -8,13 +8,17 @@ h2 {
     margin-bottom: 20px;
 }
 
-/* ===== Canvas PDF ===== */
-#pdf-canvas {
-    display: block;
-    margin: 20px auto;
-    border: 1px solid #ccc;
-    border-radius: 10px;
+.ebook-page {
+    margin: 24px;
+}
+.ebook-page img {
+    width: auto;
     max-width: 100%;
+
+    display: block;
+    margin: auto;
+
+    border: 1px solid var(--paper-dark);
 }
 
 /* ===== Controls ===== */
@@ -57,9 +61,13 @@ form {
     margin-top: 15px;
 }
 
+.jump-form button[type="submit"] {
+    margin: 0;
+}
+
 input[type="number"] {
     width: 80px;
-    padding: 6px;
+    padding: 8px;
     border-radius: 6px;
     border: 1px solid #ccc;
     text-align: center;
@@ -67,7 +75,8 @@ input[type="number"] {
 }
 
 button {
-    padding: 6px 12px;
+    font: inherit;
+    padding: 7px 12px;
     border-radius: 6px;
     border: none;
     background-color: #28a745;

@@ -15,18 +15,16 @@
 	</form>
 	<div class="ebooks-list">
 		{% for ebook in ebook_list %}
-				{% if ebook.publish_date <= today %}
-				<article class="ebooks-card">
-					<img class="ebooks-img" src="media/{{ ebook.cover }}" alt="">
-					<h2 class="ebooks-title">{{ ebook.title }}</h2>
-					<p class="ebooks-author">{{ ebook.author }}</p>
-					<hr>
-					<div class="ebooks-group-data">
-						<p class="ebooks-category">{{ ebook.get_category_display }}</p>
-					</div>
-					<p class="ebooks-publish-date">{{ ebook.publish_date }}</p>
-				</article>
-				{% endif %}
+			<article class="ebooks-card">
+				<a href="{% url 'ebook_detail' pk=ebook.pk %}"><img class="ebooks-img" src="media/{{ ebook.cover }}" alt=""></a>
+				<h2 class="ebooks-title"><a href="{% url 'ebook_detail' pk=ebook.pk %}">{{ ebook.title }}</a></h2>
+				<p class="ebooks-author">{{ ebook.author }}</p>
+				<hr>
+				<div class="ebooks-group-data">
+					<p class="ebooks-category">{{ ebook.get_category_display }}</p>
+				</div>
+				<p class="ebooks-publish-date">{{ ebook.publish_date }}</p>
+			</article>
 		{% endfor %}
 	</div>
 {% endblock content %}

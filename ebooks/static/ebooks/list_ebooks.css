@@ -29,6 +29,7 @@
 }
 
 .ebooks-title {
+	margin-top: 1rem !important;
 	font-size: 1.25rem;
 	font-weight: bold;
 }

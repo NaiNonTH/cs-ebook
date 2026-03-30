@@ -4,29 +4,35 @@
 {% block title %}{{ ebook.title }}{% endblock %}
 
 {% block css %}
-<link rel="stylesheet" href="{% static 'ebooks/ebook_detail.css' %}">
+    <link rel="stylesheet" href="{% static 'ebooks/ebooks_detail.css' %}">
 {% endblock %}
 
 {% block content %}
 <div class="ebook-layout">
-
     <div class="ebook-left">
         <img src="{{ ebook.cover.url }}" class="ebook-cover">
     </div>
-
     <div class="ebook-right">
-        <h1>{{ ebook.title }}</h1>
-        <p>Author: {{ ebook.author }}</p>
-        <p>Category: {{ ebook.get_category_display }}</p>
-
+        <header>
+            <h1>{{ ebook.title }}</h1>
+            <p>Author: {{ ebook.author }}</p>
+            <p>Category: {{ ebook.get_category_display }}</p>
+        </header>
+        <hr>
+        <p>{{ ebook.description }}</p>
         <div class="ebook-buttons">
             <a href="{{ ebook.sample.url }}" target="_blank" class="btn-primary">
                 Preview
             </a>
-
-            <a href="{% url 'read_ebook' ebook.pk %}" class="btn-secondary">
-                Full Page
-            </a>
+		    {% if ebook.post_status == 'P' %}
+                <a href="{% url 'read_ebook' ebook.pk %}" class="btn-secondary">
+                    Full Page
+                </a>
+            {% else %}
+                <button href="#" class="btn-secondary" disabled>
+                    Unpublished
+                </button>
+			{% endif %}
         </div>
     </div>
 
