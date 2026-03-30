@@ -609,11 +609,17 @@ input[type="file"]::file-selector-button:active {
 	color: var(--paper);
 	padding: 0 0.5rem;
 	border-radius: 0.25rem;
+
+    transition: background-color 0.1s;
 }
 .tag::before {
 	content: "•";
 	margin-right: 0.5rem;
 	color: var(--paper-mid);
+}
+
+a.tag:hover {
+    background: var(--amber-light);
 }
 
 .tag-groups {
