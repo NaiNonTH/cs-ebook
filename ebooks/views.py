@@ -141,6 +141,7 @@ def logout_view(request):
     logout(request)
     return redirect(reverse("login"))
 
+from datetime import date
 
 class ReadEBook(View):
     def get(self, request, pk):
@@ -185,6 +186,15 @@ class EBookDetailView(DetailView):
     model = EBook
     template_name = 'ebooks/ebook_detail.html'
     context_object_name = 'ebook'
+    
+    def dispatch(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        
+        if self.object.publish_date <= date.today() and self.object.post_status != 'P':
+            self.object.post_status = 'P'
+            self.object.save(update_fields=['post_status'])
+        
+        return super().dispatch(request, *args, **kwargs)
 
 
 class ReadingDashboard(LoginRequiredMixin, View):
