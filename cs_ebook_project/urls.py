@@ -30,4 +30,7 @@ urlpatterns = [
     path("manage/create/", views.CreateEBook.as_view(), name="create_ebook"),
     path("manage/edit/<int:pk>/", views.EditEBook.as_view(), name="edit_ebook"),
     path("", view=views.ListEBook.as_view(), name="list_ebook"),
+    path('ebook/<int:pk>/detail/', views.EBookDetailView.as_view(), name='ebook_detail'),
+    path('ebook/<int:pk>/preview/', views.PreviewEBook.as_view(), name='preview_ebook'),
+    path('ebook/<int:pk>/read/', views.ReadEBook.as_view(), name='read_ebook'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

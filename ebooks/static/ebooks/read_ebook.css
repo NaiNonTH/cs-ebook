@@ -1,0 +1,81 @@
+/* ===== Layout ===== */
+body {
+    font-family: 'DM Sans', sans-serif;
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* ===== Canvas PDF ===== */
+#pdf-canvas {
+    display: block;
+    margin: 20px auto;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    max-width: 100%;
+}
+
+/* ===== Controls ===== */
+.controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin: 20px 0;
+}
+
+/* ===== Buttons ===== */
+.btn {
+    padding: 8px 16px;
+    background-color: #333;
+    color: white;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: 0.2s;
+}
+
+.btn:hover {
+    background-color: #555;
+}
+
+/* Preview button */
+.preview-btn {
+    display: inline-block;
+    margin-top: 10px;
+    background-color: #007bff;
+}
+
+.preview-btn:hover {
+    background-color: #0056b3;
+}
+
+/* ===== Jump Form ===== */
+form {
+    text-align: center;
+    margin-top: 15px;
+}
+
+input[type="number"] {
+    width: 80px;
+    padding: 6px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    text-align: center;
+    font-size: 14px;
+}
+
+button {
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: none;
+    background-color: #28a745;
+    color: white;
+    cursor: pointer;
+    margin-left: 5px;
+}
+
+button:hover {
+    background-color: #218838;
+}
