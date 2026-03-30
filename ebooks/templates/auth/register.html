@@ -3,7 +3,11 @@
 {% block title %}Register{% endblock title %}
 
 {% block content %}
-	<h1>สมัครสมาชิก</h1>
+	<header class="page-header">
+		<h1>Register</h1>
+		<p>Sign up to start your E-Book journey!</p>
+	</header>
+	<p>Already have account? <a href="{% url 'login' %}">Login</a></p>
 	<form method="post">
 		{% csrf_token %}
 		{{ form.as_p }}

@@ -8,7 +8,7 @@
 	<title>{% block title %}No Title{% endblock title %} - cs_ebook</title>
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Serif+Display&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Athiti:wght@200;300;400;500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=DM+Serif+Display:ital@0;1&family=Pridi:wght@200;300;400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
 	<link rel="stylesheet" href="{% static 'ebooks/style.css' %}">
 	{% block css %}{% endblock css %}
 </head>
@@ -17,12 +17,18 @@
 	<header class="site-header">
 		<div class="header-inner">
 			<span id="logo">cs_<em>ebook</em></span>
-			<nav class="main-nav">
+			{% if request.user.is_authenticated %}
+			<span class="account">Welcome, {{ request.user.username }}</span>
+			{% endif %}
+			<button id="menu-btn">Menu</button>
+			<nav id="main-nav">
 				<ul>
 					<li><a href="{% url 'list_ebook' %}">Search EBooks</a></li>
 					<li><a href="{% url 'reading_dashboard' %}">My Dashboard</a></li>
 					<li><a href="{% url 'manage_ebook' %}">Manage EBooks</a></li>
-					<li><a href="{% url 'market:market_share_report' %}">Manage Marketshare</a></li>
+					{% if request.user.is_staff %}
+						<li><a href="{% url 'market:market_share_report' %}">Manage Marketshare</a></li>
+					{% endif %}
 					<li><a href="{% url 'logout' %}">Logout</a></li>
 				</ul>
 			</nav>
@@ -42,5 +48,14 @@
 			<span class="footer-copy">&copy; 2026 &mdash; CS KMUTNB</span>
 		</div>
 	</footer>
+
+	<script>
+		const menuBtn = document.getElementById("menu-btn");
+		const mainNav = document.getElementById("main-nav");
+
+		menuBtn.addEventListener("click", function() {
+			mainNav.classList.toggle("active");
+		});
+	</script>
 </body>
 </html>

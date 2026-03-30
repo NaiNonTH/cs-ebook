@@ -8,12 +8,16 @@
 {% block title %}Login{% endblock title %}
 
 {% block content %}
-	<h1>เข้าสู่ระบบ</h1>
+	<header class="page-header">
+		<h1>Login</h1>
+		<p>Login to your existing account.</p>
+	</header>
 	<div class="auth-form login">
 		<form method="post">
 			{% csrf_token %}
 			{{ form.as_p }}
 			<button type="submit" class="btn-primary">เข้าสู่ระบบ</button>
 		</form>
+		<p>No account? <a href="{% url 'register' %}">Register</a> now!</p>
 	</div>
 {% endblock content %}

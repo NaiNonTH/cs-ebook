@@ -16,7 +16,7 @@
         <header>
             <h1>{{ ebook.title }}</h1>
             <p>Author: {{ ebook.author }}</p>
-            <p>Category: {{ ebook.get_category_display }}</p>
+            <p>Category: <a href="{% url 'list_ebook' %}?category={{ ebook.category }}" class="tag">{{ ebook.get_category_display }}</a></p>
         </header>
         <hr>
         <p>{{ ebook.description }}</p>
@@ -34,6 +34,11 @@
                 </button>
 			{% endif %}
         </div>
+        <p class="tag-groups">
+            {% for tag in ebook.tags.all %}
+                <a href="{% url 'list_ebook' %}?tag={{ tag.name }}" class="tag">{{ tag.name }}</a>
+            {% endfor %}
+        </p>
     </div>
 
 </div>

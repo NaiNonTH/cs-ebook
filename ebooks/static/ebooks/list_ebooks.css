@@ -7,7 +7,7 @@
 .ebooks-list {
 	display: grid;
 	gap: 1rem;
-	grid-template-columns: repeat(auto-fit, 15rem);
+	grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
 	margin: 1rem 0;
 }
 
@@ -54,4 +54,12 @@
 }
 .ebooks-entry > div :not(hr) {
 	margin: 0.5rem 0;
+}
+
+@media (max-width: 880px) {
+	.ebooks-search-box {
+		float: none;
+		clear: none;
+		width: 100%;
+	}
 }

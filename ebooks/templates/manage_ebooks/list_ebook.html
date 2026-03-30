@@ -5,10 +5,13 @@
 	<link rel="stylesheet" href="{% static 'ebooks/list_ebooks.css' %}">
 {% endblock css %}
 
-{% block title %}Ebooks{% endblock title %}
+{% block title %}Index{% endblock title %}
 
 {% block content %}
-	<h1>ค้นหา eBook</h1>
+	<header class="page-header">
+	  <h1>New E-Books</h1>
+	  <p>Learn new crazy things about computer and data science!</p>
+	</header>
 	<form class="ebooks-search-box" method="get">
 		{{ form.as_p }}
 		<button type="submit" class="btn-primary">Search</button>

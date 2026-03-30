@@ -10,6 +10,5 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include("ebooks.urls")),
     path("market/", include("market.urls")),
-    path("", view=views.ListEBook.as_view(), name="list_ebook"),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

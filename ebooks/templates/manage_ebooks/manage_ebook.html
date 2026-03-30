@@ -5,8 +5,13 @@
 	<link rel="stylesheet" href="{% static 'ebooks/list_ebooks.css' %}">
 {% endblock css %}
 
+{% block title %}Manage E-Books{% endblock title %}
+
 {% block content %}
-	<h1>จัดการ eBook ของคุณ</h1>
+	<header class="page-header">
+	  <h1>Manage your E-books</h1>
+	  <p>Logged in as <strong>{{ request.user.username }}</strong> &mdash; {{ ebook_list|length }} book{{ ebook_list|length|pluralize }} uploaded</p>
+	</header>
 	<a href="{% url 'create_ebook' %}" class="btn-primary">+ New</a>
 	{% for ebook in ebook_list %}
 		<article class="ebooks-entry">

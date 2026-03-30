@@ -16,9 +16,9 @@
     --muted: #7a7060;
     --white: #ffffff;
 
-    --font-mono: "Space Mono", monospace;
-    --font-serif: "DM Serif Display", serif;
-    --font-sans: "DM Sans", sans-serif;
+    --font-mono: "Space Mono", "Pridi", monospace;
+    --font-serif: "DM Serif Display", "Athiti", serif;
+    --font-sans: "DM Sans", "Pridi", sans-serif;
 
     --header-h: 64px;
     --max-w: 1140px;
@@ -45,7 +45,6 @@ body {
     background-color: var(--paper);
     color: var(--ink);
     font-family: var(--font-sans);
-    font-weight: 300;
     min-height: 100dvh;
     display: flex;
     flex-direction: column;
@@ -72,7 +71,6 @@ h2,
 h3,
 h4 {
     font-family: var(--font-serif);
-    font-weight: 400;
     line-height: 1.2;
     color: var(--ink);
 }
@@ -261,14 +259,25 @@ form button[type="submit"] {
     color: var(--amber);
 }
 
+.account {
+    flex: 1;
+    color: var(--paper);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 /* Nav */
-.main-nav ul {
+#main-nav ul {
     display: flex;
     align-items: center;
     gap: 0.25rem;
+    padding: 0;
+    list-style: none;
 }
 
-.main-nav a {
+#menu-btn,
+#main-nav a {
     display: inline-block;
     font-family: var(--font-sans);
     font-size: 0.825rem;
@@ -285,17 +294,24 @@ form button[type="submit"] {
         background-color 0.2s;
 }
 
-.main-nav a:hover {
+#main-nav a:hover {
     color: var(--white);
     border-color: rgba(200, 89, 26, 0.5);
     background-color: rgba(200, 89, 26, 0.1);
 }
 
-.main-nav li:first-child a {
+#menu-btn {
+    display: none;
+    background: transparent;
+}
+
+#menu-btn,
+#main-nav li:first-child a {
     color: var(--amber-light);
 }
 
-.main-nav li:first-child a:hover {
+#menu-btn:hover,
+#main-nav li:first-child a:hover {
     color: var(--white);
     background-color: var(--amber);
     border-color: var(--amber);
@@ -447,6 +463,7 @@ form button[type="submit"] {
 /* ── Responsive ─────────────────────────────────────────────── */
 @media (max-width: 640px) {
     .header-inner {
+        position: relative;
         padding: 0 1rem;
     }
     .content-wrapper {
@@ -454,11 +471,6 @@ form button[type="submit"] {
     }
     .footer-inner {
         padding: 0 1rem;
-    }
-
-    .main-nav a {
-        font-size: 0.75rem;
-        padding: 0.35rem 0.6rem;
     }
 
     #logo {
@@ -474,6 +486,58 @@ form button[type="submit"] {
     }
 }
 
+@media (max-width: 1140px) {
+    #menu-btn {
+        display: block;
+    }
+
+    #main-nav {
+        position: absolute;
+        top: 4rem;
+        left: 0;
+        right: 0;
+        background: var(--ink);
+
+        transition: visibility 0.2s, transform 0.2s, opacity 0.2s;
+    }
+    #main-nav:not(.active) {
+        visibility: hidden;
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+
+    #main-nav ul {
+        padding: 0.25rem;
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    #main-nav a {
+        display: block;
+        font-size: 0.75rem;
+        padding: 0.5rem 1rem;
+    }
+}
+
+/* ── Header Layout ────────────────────────────── */
+.page-header {
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--paper-dark);
+    margin-bottom: 1.5rem;
+}
+.page-header h1 {
+    font-family: var(--font-serif);
+    font-size: 2rem;
+    margin: 0 0 0.25rem;
+}
+.page-header p {
+    color: var(--muted);
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+/* ── Buttons───────────────────────────────────── */
+
 input[type="file"] {
     font: inherit;
 }
@@ -485,7 +549,7 @@ input[type="file"]::file-selector-button {
     align-items: center;
     gap: 0.4rem;
     font-family: var(--font-mono);
-    font-size: 0.8rem;
+    font-size: smaller;
     font-weight: 700;
     letter-spacing: 0.04em;
     text-transform: uppercase;
@@ -537,4 +601,23 @@ input[type="file"]::file-selector-button:active {
 .btn-secondary:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+}
+
+.tag {
+	display: inline-block;
+	background: var(--amber);
+	color: var(--paper);
+	padding: 0 0.5rem;
+	border-radius: 0.25rem;
+}
+.tag::before {
+	content: "•";
+	margin-right: 0.5rem;
+	color: var(--paper-mid);
+}
+
+.tag-groups {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
 }
