@@ -1,0 +1,56 @@
+.ebooks-search-box {
+	float: left;
+	clear: left;
+	margin-right: 1rem;
+}
+
+.ebooks-list {
+	display: grid;
+	gap: 1rem;
+	grid-template-columns: repeat(auto-fit, 15rem);
+	margin: 1rem 0;
+}
+
+.ebooks-card {
+	padding: 1rem;
+	border: 1px solid var(--paper-dark);
+	background: var(--paper-mid);
+}
+.ebooks-card > :not(img, hr) {
+	margin: 0;
+}
+
+.ebooks-card .ebooks-img {
+	display: block;
+	width: 100%;
+	aspect-ratio: 1 / 1;
+	margin-bottom: 1rem;
+	object-fit: cover;
+}
+
+.ebooks-title {
+	font-size: 1.25rem;
+	font-weight: bold;
+}
+
+.ebooks-category,
+.ebooks-publish-date {
+	font-size: smaller;
+}
+
+.ebooks-entry {
+	display: flex;
+	gap: 1rem;
+	margin: 1rem 0;
+	padding: 1rem;
+	flex-wrap: wrap;
+	
+	border: 1px solid var(--paper-dark);
+	background: var(--paper-mid);
+}
+.ebooks-entry > div {
+	flex: 1;
+}
+.ebooks-entry > div :not(hr) {
+	margin: 0.5rem 0;
+}

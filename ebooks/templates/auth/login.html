@@ -1,12 +1,19 @@
 {% extends "../base.html" %}
+{% load static %}
+
+{% block css %}
+	<link rel="stylesheet" href="{% static 'ebooks/auth.css' %}">
+{% endblock css %}
 
 {% block title %}Login{% endblock title %}
 
 {% block content %}
 	<h1>เข้าสู่ระบบ</h1>
-	<form method="post">
-		{% csrf_token %}
-		{{ form.as_p }}
-		<button type="submit">เข้าสู่ระบบ</button>
-	</form>
+	<div class="auth-form login">
+		<form method="post">
+			{% csrf_token %}
+			{{ form.as_p }}
+			<button type="submit" class="btn-primary">เข้าสู่ระบบ</button>
+		</form>
+	</div>
 {% endblock content %}

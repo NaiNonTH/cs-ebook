@@ -1,0 +1,33 @@
+{% extends "../base.html" %}
+{% load static %}
+
+{% block css %}
+	<link rel="stylesheet" href="{% static 'ebooks/list_ebooks.css' %}">
+{% endblock css %}
+
+{% block content %}
+	<h1>จัดการ eBook ของคุณ</h1>
+	<a href="{% url 'create_ebook' %}" class="btn-primary">+ New</a>
+	{% for ebook in ebook_list %}
+		<article class="ebooks-entry">
+			<img src="/media/{{ ebook.cover }}" alt="" width="200">
+			<div>
+				<h2 class="ebooks-title">{{ ebook.title }}</h2>
+				<p class="ebooks-description">{{ ebook.description }}</p>
+				<hr>
+				<p class="ebooks-category">{{ ebook.get_category_display }}</p>
+				<p class="ebooks-tags">
+					{% for tag in ebook.tags.all %}
+						<span class="tag">{{ tag.name }}</span>
+					{% empty %}
+						No tags.
+					{% endfor %}
+				</p>
+				<a href="{% url 'edit_ebook' pk=ebook.pk %}" class="btn-primary">Edit Details</a>
+			</div>
+		</article>
+	{% empty %}
+		<p>ไม่พบ eBook</p>
+	{% endfor %}
+	<div></div>
+{% endblock content %}

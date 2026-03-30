@@ -14,18 +14,20 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin
-from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib import admin
+from django.urls import path
 
 from ebooks import views
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('login/', views.Login.as_view(), name='login'),
-    path('register/', views.Register.as_view(), name='register'),
-    path('create/', views.CreateEBook.as_view(), name='create_ebook'),
-    path('edit/<int:pk>/', views.EditEBook.as_view(), name='edit_ebook'),
-    path('market/', include('market.urls')),
+    path("admin/", admin.site.urls),
+    path("login/", views.Login.as_view(), name="login"),
+    path("logout/", views.logout_view, name="logout"),
+    path("register/", views.Register.as_view(), name="register"),
+    path("manage/", views.ManageEBook.as_view(), name="manage_ebook"),
+    path("manage/create/", views.CreateEBook.as_view(), name="create_ebook"),
+    path("manage/edit/<int:pk>/", views.EditEBook.as_view(), name="edit_ebook"),
+    path("", view=views.ListEBook.as_view(), name="list_ebook"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
