@@ -151,36 +151,44 @@ class PreviewEBook(View):
         }
         return render(request, 'reader/read_ebook.html', context)
 
+class EBookDetailView(DetailView):
+    model = EBook
+    template_name = 'ebooks/ebook_detail.html'
+    context_object_name = 'ebook'
 
 class ReadEBook(View):
     def get(self, request, pk):
         ebook = get_object_or_404(EBook, pk=pk)
 
-        page_str = request.GET.get('page', '1')
+        # path ไป folder รูป
+        folder_path = os.path.join(settings.MEDIA_ROOT, f'books/{ebook.id}')
 
+        # list รูปทั้งหมด
+        pages = sorted([
+            f for f in os.listdir(folder_path) if f.endswith('.png')
+        ])
+
+        total_pages = len(pages)
+
+        # รับค่า page (กัน error)
+        page_str = request.GET.get('page')
         try:
-            page = int(page_str)
-        except (ValueError, TypeError):
+            page = int(page_str) if page_str else 1
+        except ValueError:
             page = 1
 
+        # clamp page
         if page < 1:
             page = 1
-        if page > ebook.page_count:
-            page = ebook.page_count
+        if page > total_pages:
+            page = total_pages
 
-        context = {
+        # current image
+        current_image = f'/media/books/{ebook.id}/{pages[page-1]}'
+
+        return render(request, 'reader/read_ebook.html', {
             'ebook': ebook,
             'page': page,
-            'total_pages': ebook.page_count,
-            'is_preview': False
-        }
-        return render(request, 'reader/read_ebook.html', context)
-    
-    from django.views.generic import DetailView
-from .models import EBook
-
-
-class EBookDetailView(DetailView):
-    model = EBook
-    template_name = 'ebooks/ebook_detail.html'
-    context_object_name = 'ebook'
+            'total_pages': total_pages,
+            'current_image': current_image,
+        })
