@@ -36,7 +36,7 @@
         </div>
         <p class="tag-groups">
             {% for tag in ebook.tags.all %}
-                <a href="{% url 'list_ebook' %}?tag={{ tag.name }}" class="tag">{{ tag.name }}</a>
+                <a href="{% url 'list_ebook' %}?query={{ tag.name }}&only_tag=1" class="tag">{{ tag.name }}</a>
             {% endfor %}
         </p>
     </div>

@@ -17,6 +17,8 @@ from .models import EBook, LogRead
 from django.shortcuts import get_object_or_404
 from django.views import View
 
+from django.db.models import Q
+
 # Create your views here.
 
 
@@ -34,13 +36,13 @@ class Register(CreateView):
     template_name = "auth/register.html"
     form_class = RegisterForm
     success_url = "/login/"
-    
-    
+
+
 class ManageEBook(LoginRequiredMixin, ListView):
     model = EBook
     template_name = "manage_ebooks/manage_ebook.html"
     login_url = "/login/"
-    
+
     def get_queryset(self):
         return EBook.objects.filter(author__username=self.request.user.username)
 
@@ -50,7 +52,7 @@ class CreateEBook(LoginRequiredMixin, CreateView):
     template_name = "manage_ebooks/create_ebook.html"
     success_url = "/manage"
     login_url = "/login/"
-    
+
     def natural_sort_key(self, filename):
         return [int(c) if c.isdigit() else c.lower() for c in re.split(r'(\d+)', filename)]
 
@@ -62,7 +64,7 @@ class CreateEBook(LoginRequiredMixin, CreateView):
         files = self.request.FILES.getlist('images')
 
         save_dir = os.path.join(settings.MEDIA_ROOT, f'books/{self.object.pk}')
-        
+
         os.makedirs(save_dir, exist_ok=True)
 
         for index, f in enumerate(files, start=1):
@@ -105,20 +107,20 @@ class ListEBook(LoginRequiredMixin, ListView):
             return qs
 
         if self.form.is_valid():
-            title = self.form.cleaned_data.get("title")
-            tag = self.form.cleaned_data.get("tag")
-            description = self.form.cleaned_data.get("description")
+            query = self.form.cleaned_data.get("query")
             author = self.form.cleaned_data.get("author")
             category = self.form.cleaned_data.get("category")
 
-            if title:
-                qs = qs.filter(title__icontains=title)
+            if query:
+                tags = query.split(",")
 
-            if tag:
-                qs = qs.filter(tags__name__in=tag.split())
+                for i, tag in enumerate(tags):
+                    tags[i] = tag.strip()
 
-            if description:
-                qs = qs.filter(description__icontains=description)
+                if self.request.GET.get('only_tag'):
+                    qs = qs.filter(tags__name__in=tags)
+                else:
+                    qs = qs.filter(Q(title__icontains=query) | Q(tags__name__in=tags) | Q(description__icontains=query))
 
             if author:
                 qs = qs.filter(author=author)
@@ -133,7 +135,7 @@ class ListEBook(LoginRequiredMixin, ListView):
 
         form = EbookSearchForm(self.request.GET)
         context["form"] = form
-        
+
         return context
 
 
@@ -146,7 +148,7 @@ from datetime import date
 class ReadEBook(View):
     def get(self, request, pk):
         ebook = get_object_or_404(EBook, pk=pk)
-        
+
         if ebook.post_status != 'P':
             return Http404()
 
@@ -175,9 +177,9 @@ class ReadEBook(View):
             'total_pages': ebook.page_count,
             'is_preview': False
         }
-        
+
         return render(request, 'reader/read_ebook.html', context)
-    
+
 from django.views.generic import DetailView
 from .models import EBook
 
@@ -186,14 +188,14 @@ class EBookDetailView(DetailView):
     model = EBook
     template_name = 'ebooks/ebook_detail.html'
     context_object_name = 'ebook'
-    
+
     def dispatch(self, request, *args, **kwargs):
         self.object = self.get_object()
-        
+
         if self.object.publish_date <= date.today() and self.object.post_status != 'P':
             self.object.post_status = 'P'
             self.object.save(update_fields=['post_status'])
-        
+
         return super().dispatch(request, *args, **kwargs)
 
 

@@ -122,16 +122,16 @@ class RegisterForm(UserCreationForm):
         )
 
 
-class EbookSearchForm(forms.Form):
-    User = get_user_model()
-    title = forms.CharField(required=False, label="Title")
-    tag = forms.CharField(required=False, label="Tag")
-    description = forms.CharField(required=False, label="Description")
-    category = forms.ChoiceField(
-        required=False,
-        choices=[("", "---")] + EBook._meta.get_field("category").choices,
-        initial="",
-    )
-    author = forms.ModelChoiceField(
-        queryset=User.objects.all(), required=False, empty_label="All authors"
-    )
+class EbookSearchForm(forms.ModelForm):
+	class Meta:
+		model = EBook
+		fields = ['category', 'author']
+
+	query = forms.CharField(required=False, label="Search")
+
+	field_order = ['query', 'category', 'author']
+
+	def __init__(self, *args, **kwargs):
+		super(EbookSearchForm, self).__init__(*args, **kwargs)
+		self.fields['category'].required = False
+		self.fields['author'].required = False
